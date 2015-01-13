@@ -10,7 +10,7 @@ import os.path
 import sys
 import time
 import unicodedata
-import chardet
+# import chardet
 
 def welcome():
 	os.system('cls')
@@ -70,15 +70,15 @@ def transformFile(rootXSLT,sourceXML,targetXML):
 		domEncodingType = domFile.encoding
 		domFile.close()
 
-		# Open XSLT file and get bytes doc
-		xslt_root = open(rootXSLT,'rb')
-		xslt_rootBytes = xslt_root.read()	
-		xslt_root.close()
+		# # Open XSLT file and get bytes doc
+		# xslt_root = open(rootXSLT,'rb')
+		# xslt_rootBytes = xslt_root.read()	
+		# xslt_root.close()
 		
-		# #open source File and get bytes doc
-		dom = open(sourceXML,'rb')	
-		domBytes = dom.read()
-		dom.close()
+		# # #open source File and get bytes doc
+		# dom = open(sourceXML,'rb')	
+		# domBytes = dom.read()
+		# dom.close()
 
 		xsltXML = etree.parse(rootXSLT)
 		domXML = etree.parse(sourceXML)
