@@ -32,7 +32,7 @@ def welcome():
 	print("---------------------------------\n\r")	
 
 def getTargetFileName(prefix):
-	date = time.strftime("%Y_%M_%d_%H_%M")
+	date = time.strftime("%Y_%M_%d_%H_%M_%S")
 	return "{}_{}.xml".format(prefix,date)
 
 def getRootFileName(rootFile):
@@ -65,66 +65,37 @@ def getSourceFileName():
 	return sourceFileName	
 
 def transformFile(rootXSLT,sourceXML,targetXML):
-	# try:		
-	domFile = open(sourceXML,'r')
-	domEncodingType = domFile.encoding
-	domFile.close()
+	try:		
+		domFile = open(sourceXML,'r')
+		domEncodingType = domFile.encoding
+		domFile.close()
 
-	# Open XSLT file and get bytes doc
-	xslt_root = open(rootXSLT,'rb')
-	xslt_rootBytes = xslt_root.read()	
-	xslt_root.close()
+		# Open XSLT file and get bytes doc
+		xslt_root = open(rootXSLT,'rb')
+		xslt_rootBytes = xslt_root.read()	
+		xslt_root.close()
+		
+		# #open source File and get bytes doc
+		dom = open(sourceXML,'rb')	
+		domBytes = dom.read()
+		dom.close()
 
+		xsltXML = etree.parse(rootXSLT)
+		domXML = etree.parse(sourceXML)
 
-	# #open source File and get bytes doc
-	dom = open(sourceXML,'rb')	
-	domBytes = dom.read()
-	dom.close()
+		transform = etree.XSLT(xsltXML)
+		result = transform(domXML)	
 
-	# #get encoding type by chardet module
-	# length = round(len(domBytes)*0.1)
-	# if length > 500 :
-	# 	length=500
-	# elif length <50:
-	# 	print("File seems empty")
-	# 	sys.exit()
-	# domEncodingType = chardet.detect(domBytes[0:length])
-	# if domEncodingType:
-	# 	domEncodingType = domEncodingType["encoding"]
-	# else:
-	# 	print("encoding type can not be detected")
-	# 	sys.exit()
-	
-	
-	#get string from XSLT file	
-	# xs = str(xslt_rootBytes.decode(domEncodingType,"ignore"))	
-	# print(xs)
-	# sys.exit()
-	xsltStr = str(xslt_rootBytes,domEncodingType,"ignore").encode("utf-8","ignore")
-	domStr = str(domBytes,domEncodingType,"ignore").encode("utf-8","ignore")
-	# xs = domBytes.decode("cp936","ignore")
-	# xs = domBytes.decode("utf-8-sig")
-	# print(xs)
-	# sys.exit()
-	# xsltXML = etree.fromstring(xsltStr)
-	# domXML = etree.fromstring(domStr)
-	xsltXML = etree.parse(rootXSLT)
-	domXML = etree.parse(sourceXML)
-
-	transform = etree.XSLT(xsltXML)
-	result = transform(domXML)
-	# sys.exit()
-
-	print(str(result,domEncodingType,"ignore")[0:200])
-	sys.exit()
-	f = open(targetXML,'w')
-	f.write(str(result))
-	f.close()
-	print("-------------------------------")
-	print("New File Created:\n\r{}".format(targetXML))
-	# except:
-	# 	print("looks like something wrong with the file")
-	# 	print("Please contact IT suppot ITsuppot@mysale.com")
+		result = str(result,domEncodingType,"ignore")
+		
+		f = open(targetXML,'w')
+		f.write(str(result))
+		f.close()
+		print("-------------------------------")
+		print("New File Created:\n\r{}".format(targetXML))
+	except:
+		print("looks like something wrong with the file")
+		print("Please contact IT suppot ITsuppot@mysale.com")
 
 def init():
 
