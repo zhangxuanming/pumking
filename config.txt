@@ -1,0 +1,6 @@
+{
+	"xlstFolder":"xslt",
+	"xlstFile":"pumking.xslt",
+	"outputFolder":"outputXML",
+	"sourceFolder":"sourceXML"
+}
