@@ -10,9 +10,10 @@ import os.path
 import sys
 import time
 import unicodedata
+import json
 # import chardet
 
-def welcome():
+def show_welcome():
 	os.system('cls')
 	msg = {
 	'1':"-------Welcom To MYSALEGROUP-------",
@@ -46,7 +47,7 @@ def getRootFileName(rootFile):
 def fileCheck(filename):
 	return os.path.isfile(filename)
 
-def getSourceFileName():
+def getSourceFileName(sourceFolder):
 	print("to exit the program please type quit")
 	print("Please type The Name of the XML file You Downloaded From Admin Site")
 	while True:		
@@ -54,7 +55,7 @@ def getSourceFileName():
 		if sourceFileName == "quit":
 			sys.exit()			
 
-		fc = fileCheck(sourceFileName)
+		fc = fileCheck(sourceFolder+sourceFileName)
 		if fc!=True:
 			print("File not Exist,Please Try again")
 			continue
@@ -62,7 +63,7 @@ def getSourceFileName():
 			print("Your Awesome!")
 			print("The Downloaded File name is : [{}]".format(sourceFileName))
 			break	
-	return sourceFileName	
+	return sourceFolder+sourceFileName	
 
 def transformFile(rootXSLT,sourceXML,targetXML):
 	try:		
@@ -74,7 +75,7 @@ def transformFile(rootXSLT,sourceXML,targetXML):
 		# xslt_root = open(rootXSLT,'rb')
 		# xslt_rootBytes = xslt_root.read()	
 		# xslt_root.close()
-		
+
 		# # #open source File and get bytes doc
 		# dom = open(sourceXML,'rb')	
 		# domBytes = dom.read()
@@ -97,13 +98,34 @@ def transformFile(rootXSLT,sourceXML,targetXML):
 		print("looks like something wrong with the file")
 		print("Please contact IT suppot ITsuppot@mysale.com")
 
-def init():
+#config file must be ascii, and create by notepad++ use ascii and json format
+def getConfigInfoFromFile(configFile):
+	if fileCheck(configFile) != True:
+		print("configFile missing!,please check")
+		sys.exit()
 
-	welcome()
+	s = open(configFile,'r')
+	st = s.read()
+	dicStr = json.loads(st)
+	
+	s.close()
+	return dicStr
+	
+
+def init():
+	configDict = getConfigInfoFromFile("config.txt")
+
+	rootFile = configDict["xlstFolder"]+"\\"+configDict["xlstFile"]
+	sourceFileFolder = configDict["sourceFolder"]+"\\"
+	outputFileFolder = configDict["outputFolder"]+"\\"+"pumking"
+
+	show_welcome()
+
 	while True:
-		rootFileName = getRootFileName("xslt\pumking.xslt")
-		sourceFileName = getSourceFileName()
-		TargetFileName = getTargetFileName("created_file\pumking")	
+		rootFileName = getRootFileName(rootFile)
+		sourceFileName = getSourceFileName(sourceFileFolder)		
+		TargetFileName = getTargetFileName(outputFileFolder)
+
 		transformFile(rootFileName,sourceFileName,TargetFileName)	
 
 		ck = input("type y to continue, type n to exit: ")
@@ -111,5 +133,6 @@ def init():
 			continue	
 		else:
 			break
-
+			
+#program start here
 init()
