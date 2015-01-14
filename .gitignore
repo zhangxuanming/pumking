@@ -5,3 +5,4 @@ test.xml
 dist/ * 
   
 created_file/* 
+*.xml 
